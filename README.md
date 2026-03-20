@@ -27,7 +27,7 @@ Turn any toy into a talking, real character using AI! Upload a photo of a stuffe
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/toy-alive.git
+git clone https://github.com/gaser-dev/toy-alive.git
 cd toy-alive
 
 # Serve with any static server

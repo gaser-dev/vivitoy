@@ -6,7 +6,12 @@ const CHAT_MODEL = 'meta-llama/llama-3.2-11b-vision-instruct:free';
 
 class ToyAPI {
     constructor() {
-        this.apiKey = localStorage.getItem('openrouter_api_key') || '';
+        const DEFAULT_KEY = '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';
+        this.apiKey = localStorage.getItem('openrouter_api_key') || DEFAULT_KEY;
+        // Auto-save default key to localStorage so the modal won't show
+        if (!localStorage.getItem('openrouter_api_key') && DEFAULT_KEY) {
+            localStorage.setItem('openrouter_api_key', DEFAULT_KEY);
+        }
     }
 
     hasKey() {

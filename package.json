@@ -1,0 +1,22 @@
+{
+  "name": "toy-alive",
+  "version": "1.0.0",
+  "description": "Turn any toy into a talking, real character using AI",
+  "main": "app.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gaser-dev/toy-alive.git"
+  },
+  "keywords": [
+    "ai",
+    "openrouter",
+    "vision",
+    "toy"
+  ],
+  "author": "gaser-dev",
+  "license": "MIT"
+}

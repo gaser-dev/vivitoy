@@ -30,7 +30,7 @@ class ToyAPI {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${this.apiKey}`,
                 'HTTP-Referer': window.location.origin,
-                'X-Title': 'ToyAlive'
+                'X-Title': 'Vivitoy'
             },
             body: JSON.stringify({
                 model,
@@ -55,7 +55,11 @@ class ToyAPI {
     /**
      * Analyze a toy image and return a structured description.
      */
-    async analyzeToy(imageBase64) {
+    async analyzeToy(imageBase64, userDescription = '') {
+        const descriptionHint = userDescription
+            ? `\n\nThe owner describes this toy as: "${userDescription}". Use this info to enhance your analysis.`
+            : '';
+
         const messages = [
             {
                 role: 'system',
@@ -84,7 +88,7 @@ Use this exact JSON format:
                     },
                     {
                         type: 'text',
-                        text: 'Analyze this toy image. Respond with ONLY the JSON, nothing else.'
+                        text: `Analyze this toy image. Respond with ONLY the JSON, nothing else.${descriptionHint}`
                     }
                 ]
             }

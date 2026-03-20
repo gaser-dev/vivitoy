@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToyAlive — Bring Your Toys to Life</title>
+    <meta name="description" content="Upload a photo of any toy and watch it come alive as a talking, real character powered by AI.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- API Key Modal -->
+    <div id="api-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content glass-card">
+            <div class="modal-icon">🔑</div>
+            <h2>Enter Your OpenRouter API Key</h2>
+            <p>Get a free key at <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a></p>
+            <div class="input-group">
+                <input type="password" id="api-key-input" placeholder="sk-or-v1-..." autocomplete="off">
+                <button id="toggle-key-visibility" class="icon-btn" title="Toggle visibility">👁️</button>
+            </div>
+            <button id="save-api-key" class="btn btn-primary">Save & Continue</button>
+            <p class="modal-note">Your key is stored locally and never shared.</p>
+        </div>
+    </div>
+
+    <!-- Settings Button (always visible) -->
+    <button id="settings-btn" class="settings-btn" title="Settings">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+
+    <!-- ========== SCREEN 1: UPLOAD ========== -->
+    <section id="screen-upload" class="screen active">
+        <div class="upload-container">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="gradient-text">Bring Your Toys</span>
+                    <br>to Life ✨
+                </h1>
+                <p class="hero-subtitle">Upload a photo of any toy and watch it transform into a talking, real character powered by AI</p>
+            </div>
+
+            <div id="drop-zone" class="drop-zone">
+                <div class="drop-zone-inner">
+                    <div class="upload-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                    </div>
+                    <p class="drop-text">Drag & drop your toy image here</p>
+                    <p class="drop-subtext">or</p>
+                    <label for="file-input" class="btn btn-secondary">Browse Files</label>
+                    <input type="file" id="file-input" accept="image/*" hidden>
+                    <p class="file-types">Supports JPG, PNG, WebP</p>
+                </div>
+            </div>
+
+            <!-- Image Preview -->
+            <div id="preview-area" class="preview-area hidden">
+                <div class="preview-card glass-card">
+                    <img id="preview-img" alt="Toy preview">
+                    <div class="preview-actions">
+                        <button id="change-image" class="btn btn-ghost">Change Image</button>
+                        <button id="bring-to-life" class="btn btn-primary btn-magic">
+                            <span class="btn-sparkle">✨</span> Bring to Life
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating particles -->
+        <div class="particles" id="particles"></div>
+    </section>
+
+    <!-- ========== SCREEN 2: LOADING ========== -->
+    <section id="screen-loading" class="screen">
+        <div class="loading-container">
+            <div class="magic-circle">
+                <div class="magic-ring ring-1"></div>
+                <div class="magic-ring ring-2"></div>
+                <div class="magic-ring ring-3"></div>
+                <div class="magic-core">
+                    <img id="loading-img" alt="Your toy">
+                </div>
+            </div>
+            <h2 class="loading-text">
+                <span id="loading-status">Analyzing your toy...</span>
+            </h2>
+            <div class="loading-bar">
+                <div class="loading-bar-fill" id="loading-bar-fill"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SCREEN 3: CHARACTER ========== -->
+    <section id="screen-character" class="screen">
+        <div class="character-layout">
+            <!-- Character Display -->
+            <div class="character-display">
+                <div class="character-image-wrapper" id="character-image-wrapper">
+                    <div class="glow-ring"></div>
+                    <div class="sparkles" id="sparkles"></div>
+                    <img id="character-img" alt="Your alive toy">
+                </div>
+                <div class="character-info glass-card">
+                    <h2 id="character-name" class="character-name"></h2>
+                    <p id="character-personality" class="character-personality"></p>
+                    <div id="character-traits" class="character-traits"></div>
+                </div>
+            </div>
+
+            <!-- Chat Interface -->
+            <div class="chat-container glass-card">
+                <div class="chat-header">
+                    <h3>💬 Chat with <span id="chat-character-name"></span></h3>
+                    <button id="mute-btn" class="icon-btn" title="Toggle voice">🔊</button>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Messages will be added here -->
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Say something to your toy..." autocomplete="off">
+                    <button id="voice-input-btn" class="icon-btn mic-btn" title="Voice input">🎤</button>
+                    <button id="send-btn" class="btn btn-primary btn-send" title="Send">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back button -->
+        <button id="new-toy-btn" class="btn btn-ghost new-toy-btn">← Try Another Toy</button>
+    </section>
+
+    <script src="api.js"></script>
+    <script src="speech.js"></script>
+    <script src="animations.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
